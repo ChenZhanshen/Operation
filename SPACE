@@ -1,5 +1,5 @@
 /* find total space for specific tablespace */
-select tablespace_name, round(sum(bytes)/1024/1024/1204, 2) as total_space --sum all files in a specific tablespace and count it as GB
+select tablespace_name, round(sum(bytes)/1024/1024/1204, 2) as total_space --sum all files in a specific tablespace in GB
 from dba_data_files
 where tablespace_name in  ('ENC_USER_DATA','ENC_USER_IDX','UNDOTBS1','USER_DATA','USER_IDX')
 group by tablespace_name
