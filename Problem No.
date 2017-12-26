@@ -1,0 +1,6 @@
+--When problems are detected by Oracle they are written to Alert Log. Each Repeat of a problem is an incident;  A complete list of problems is only viewable via OEM enteprise manager (DBA ACCESS ONLY).  Problems may be an Oracle Bug,  Parameter Change  but usually the result of a crashed session.
+SELECT upper(replace(name, ' ', '_')) as key, to_number(value) as value 
+FROM V$DIAG_INFO info
+--describes the state of Automatic Diagnostic Repository (ADR) functionality using NAME=VALUE pairs. 
+where name in ('Active Problem Count', 'Active Incident Count')
+--Specify how many problems/incidents there are in this ADR that either happened in the last 24 hours or have a piece of metadata set indicating that it is a persistent error (like a disk corruption) 
