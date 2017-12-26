@@ -1,0 +1,2 @@
+select 'BLOCKING_SESSION', count(1) as value from v$lock l   --count the number of blocking sessions    
+where block = 1   /*the lock in question is blocking other processes.*/
