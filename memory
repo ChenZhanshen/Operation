@@ -1,0 +1,12 @@
+select name as name_key, value as numeric_value from 
+(
+select 'SGA_INUSE' as name, sum(round(bytes/1024 /1024)) as value 
+from V$SGASTAT /* sum all components' space in use of SGA and named as SGA_INUSE */
+union 
+select 'PGA_' || upper(replace(name, ' ', '_')) as name , round(value / 1024 / 1024) as value from v$pgastat 
+where name in ('total PGA inuse', 'total PGA allocated') /*total PGA allocated: Current amount of PGA memory allocated by the instance. This number should below the value of the PGA_AGGREGATE_TARGET. However, it is possible for the PGA allocated to exceed that value by a small percentage and for a short period of time when the work area workload is increasing very rapidly or when PGA_AGGREGATE_TARGET is set to a small value. total PGA INUSE: Indicates how much PGA memory is currently consumed by work areas.  */
+union 
+select upper(name) as name , to_number(value) /1024 /1024 as value 
+from V$parameter /*displays information about the initialization parameters that are currently in effect for the session.*/
+where name in  ('sga_target', 'pga_aggregate_target')
+) memory_stats
