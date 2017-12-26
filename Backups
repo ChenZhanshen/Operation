@@ -1,0 +1,20 @@
+--select latest status for FRA and Incremental backups
+WITH job_details AS 
+(select input_type as  INPUT_TYPE,  /*backup targets*/
+START_TIME, END_TIME, OUTPUT_DEVICE_TYPE, STATUS, INPUT_BYTES_DISPLAY, OUTPUT_BYTES_PER_SEC_DISPLAY,  TIME_TAKEN_DISPLAY
+from V$RMAN_BACKUP_JOB_DETAILS where start_time in (select max(start_time) from V$RMAN_BACKUP_JOB_DETAILS
+where INPUT_TYPE in ('DB INCR', 'RECVR AREA')group by INPUT_TYPE) )
+select replace(INPUT_TYPE, ' ', '_') as BACKUP_TYPE ,
+decode(STATUS,'COMPLETED', 1,'RUNNING', 2,'RUNNING WITH WARNINGS', 3 ,'COMPLETED WITH WARNINGS', 4,'RUNNING WITH ERRORS', 5 ,'COMPLETED WITH ERRORS', 6,'FAILED', 7) as STATUS_VALUE
+from job_details
+
+/*INPUT_TYPE: Contains one of the following values. 
+•DB FULL: full backup
+•RECVR AREA: backup for FRA
+•DB INCR: incremental backup
+•DATAFILE FULL: datafile full backup
+•DATAFILE INCR: datafile incremental backup
+•ARCHIVELOG: backup of archive log
+•CONTROLFILE: control file backup
+•SPFILE: spfile backup
+*/
