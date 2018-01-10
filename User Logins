@@ -1,0 +1,11 @@
+--total logins
+select 'TOTAL_LOGINS', count(user_id) as value from user_sessions where logout_date is null
+
+
+--select user logins for each web server
+select SERVERNAME, count(user_sessions.user_id) as value
+from (select  'LASUCM0101UK' A1,'LASUCM0102UK' A2,'LASUCM0103UK' A3,'LASUCM0104UK' A4,'LASUCM0105UK' A5,'LASUCM0106UK' A6,'LASUCM0107UK' A7,'LASUCM0108UK' A8 
+from dual) 
+unpivot( SERVERNAME for COLNAME in ("A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8")) pivot_tab
+left outer join  user_sessions on WEB_SERVER_NAME = SERVERNAME and logout_date is null 
+group by SERVERNAME
