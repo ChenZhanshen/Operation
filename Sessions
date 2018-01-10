@@ -11,5 +11,8 @@ from v$session
 where
 upper(username) like ('%&username%') and status='ACTIVE' order by LAST_CALL_ET desc
 
-
-
+--kill inactive sessions, copy the query result directly to kill inactive sessions
+select 'ALTER SYSTEM DISCONNECT SESSION '''|| sid||','||serial# ||''' IMMEDIATE;' 
+from v$session
+where machine='gbl10598.systems.uk.hsbc' and username='UCM_UI' and   --specify machine name and username
+status='INACTIVE' order by LOGON_TIME;
