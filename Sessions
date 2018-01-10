@@ -16,3 +16,30 @@ select 'ALTER SYSTEM DISCONNECT SESSION '''|| sid||','||serial# ||''' IMMEDIATE;
 from v$session
 where machine='gbl10598.systems.uk.hsbc' and username='UCM_UI' and   --specify machine name and username
 status='INACTIVE' order by LOGON_TIME;
+
+--select inactive sessions
+select
+inst_id,rpad(s.username,14,' ') as "DB User",
+
+to_char(logon_time,'hh24:mi
+Mon/dd') as "Logon Time",
+
+s.sid||','||s.serial#
+SESS,
+
+rpad(lower(osuser),10,'
+') as "OS User", rpad(s.terminal,12,' ') "Terminal",
+
+rpad(initcap(machine),15,'
+') as "Machine Name" ,substr(s.event,1,25)
+event,round(LAST_CALL_ET/60) MINS, sql_ID,initcap(status) as "Status"
+
+from v$session s
+
+where
+upper(s.username)= upper('&username') and s.status='INACTIVE' and
+s.username <> 'SYS' and sql_id='&sql_id'
+
+order by
+LAST_CALL_ET desc;
+
