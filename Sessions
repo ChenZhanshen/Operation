@@ -11,6 +11,5 @@ from v$session
 where
 upper(username) like ('%&username%') and status='ACTIVE' order by LAST_CALL_ET desc
 
---total logins on the DB
-select 'TOTAL_LOGINS', count(user_id) as value from user_sessions where logout_date is null
+
 
