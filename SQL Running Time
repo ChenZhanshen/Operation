@@ -1,0 +1,9 @@
+--select query running time
+select floor((sysdate - SQL_EXEC_START) * 1440) ELAPSED_TIME, schemaname, status,sql_id 
+from  v$session where SQL_EXEC_START is not null order by ELAPSED_TIME desc
+
+
+--find SQL for specified SQL_ID
+set long 9999999
+select SQL_FULLTEXT from v$sqlarea where SQL_ID='&sqlid';
+
