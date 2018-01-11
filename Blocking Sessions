@@ -1,2 +1,6 @@
 select 'BLOCKING_SESSION', count(1) as value from v$lock l   --count the number of blocking sessions    
 where block = 1   /*the lock in question is blocking other processes.*/
+
+--the longest block
+select MAX(SECONDS_IN_WAIT) from V$session 
+where final_blocking_session is not null   --there is a final blocking session and it is identified 
