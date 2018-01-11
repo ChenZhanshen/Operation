@@ -2,6 +2,11 @@
 select floor((sysdate - SQL_EXEC_START) * 1440) ELAPSED_TIME, schemaname, status,sql_id 
 from  v$session where SQL_EXEC_START is not null order by ELAPSED_TIME desc
 
+--count number of sessions for those query runing time > 60min 
+select case when floor((sysdate - min(SQL_EXEC_START)) * 1440) > 60 then 1 else 0 end as HUNG_COUNT  
+from v$session 
+where SQL_EXEC_START is not null and SCHEMANAME in ('UCM_UI') and status ='ACTIVE'
+
 
 --find SQL for specified SQL_ID
 set long 9999999
