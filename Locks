@@ -1,3 +1,6 @@
-select 'Inactive_LOCKS' as key_name, (select count(1) from entity_locks join user_sessions on user_sessions.id = entity_locks.session_id and logout_date is not null) as key_value from dual
+-- find login locks and logout locks respectively 
+select 'Orphaned_LOCKS' as key_name, (select count(1) from entity_locks join user_sessions on user_sessions.id = entity_locks.session_id and logout_date is not null) as key_value from dual
 union
 select 'Current_LOCKS' as key_name, (select count(1) from entity_locks join user_sessions on user_sessions.id = entity_locks.session_id and logout_date is null) as key_value from dual
+
+
